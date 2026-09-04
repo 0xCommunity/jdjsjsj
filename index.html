@@ -3,16 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>历史罪证档案 / Historical Evidence Archive</title>
+  <title>历史罪证与公判档案 / Historical Evidence & Judgment Archive</title>
   <style>
     :root {
-      --bg: #121214;
-      --card-bg: #1c1c1f;
-      --border: #2e2e33;
-      --text: #e4e4e7;
+      --bg: #0e0e11;
+      --card-bg: #18181c;
+      --card-border: #2c2c34;
+      --text: #f4f4f5;
       --muted: #a1a1aa;
-      --accent: #dc2626;
-      --accent-hover: #b91c1c;
+      --accent: #b91c1c;
+      --accent-hover: #dc2626;
+      --highlight: #f59e0b;
     }
 
     * {
@@ -26,89 +27,181 @@
       background-color: var(--bg);
       color: var(--text);
       line-height: 1.6;
-      padding: 24px;
+      padding: 24px 16px;
     }
 
     .container {
-      max-width: 960px;
+      max-width: 1100px;
       margin: 0 auto;
     }
 
+    /* 顶部导航与语言栏 */
     header {
       display: flex;
       flex-direction: column;
       gap: 16px;
-      padding-bottom: 24px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--card-border);
+      margin-bottom: 24px;
     }
 
-    @media (min-width: 640px) {
-      header {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-      }
+    .header-top {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
     }
 
     h1 {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
+      font-weight: 700;
       letter-spacing: 0.5px;
       color: #fff;
     }
 
     .lang-switcher {
       display: flex;
-      gap: 8px;
+      gap: 6px;
     }
 
     .btn-lang {
-      background-color: var(--card-bg);
-      border: 1px solid var(--border);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       color: var(--muted);
-      padding: 6px 14px;
-      border-radius: 6px;
+      padding: 5px 14px;
+      border-radius: 4px;
       cursor: pointer;
-      font-size: 0.875rem;
-      font-weight: 500;
-      transition: all 0.2s ease;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
     }
 
-    .btn-lang:hover {
-      border-color: var(--accent);
-      color: #fff;
-    }
-
-    .btn-lang.active {
+    .btn-lang:hover, .btn-lang.active {
       background-color: var(--accent);
       border-color: var(--accent);
       color: #fff;
     }
 
-    .intro-box {
-      background-color: var(--card-bg);
-      border-left: 4px solid var(--accent);
-      padding: 16px 20px;
-      margin-bottom: 32px;
-      color: var(--muted);
-      font-size: 0.95rem;
+    /* 页面导航条 */
+    .nav-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
     }
 
-    .grid {
+    .nav-btn {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--muted);
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .nav-btn.active {
+      background: var(--card-bg);
+      border-color: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      box-shadow: inset 0 -2px 0 var(--accent);
+    }
+
+    /* 页面容器显示控制 */
+    .page-section {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .page-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 2D 海报与多语言覆盖图层 */
+    .poster-container {
+      position: relative;
+      width: 100%;
+      max-height: 480px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+      margin-bottom: 24px;
+      background-color: #000;
+    }
+
+    .poster-img {
+      width: 100%;
+      height: 100%;
+      max-height: 480px;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.72) contrast(1.15);
+    }
+
+    .poster-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.85) 100%);
+    }
+
+    .poster-title-top {
+      font-size: clamp(1.4rem, 3.2vw, 2.4rem);
+      font-weight: 900;
+      color: #f87171;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.9), 0 0 15px rgba(185,28,28,0.6);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .poster-subtitle-bottom {
+      font-size: clamp(1rem, 2.2vw, 1.6rem);
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.95);
+      border-left: 4px solid var(--accent);
+      padding-left: 12px;
+      max-width: 80%;
+    }
+
+    /* 卡片与网格排版 */
+    .grid-cards {
       display: grid;
-      gap: 20px;
       grid-template-columns: 1fr;
+      gap: 20px;
     }
 
     @media (min-width: 768px) {
-      .grid {
+      .grid-cards {
         grid-template-columns: repeat(2, 1fr);
       }
     }
 
-    .card {
-      background-color: var(--card-bg);
-      border: 1px solid var(--border);
+    .detail-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       border-radius: 8px;
       padding: 24px;
       display: flex;
@@ -116,31 +209,41 @@
       gap: 12px;
     }
 
-    .card h2 {
-      font-size: 1.2rem;
+    .detail-card .tag {
+      font-size: 0.75rem;
+      color: var(--accent);
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .detail-card h3 {
+      font-size: 1.15rem;
       color: #fff;
     }
 
-    .card .meta {
-      font-size: 0.8rem;
-      color: var(--accent);
-      font-weight: 600;
-      text-transform: uppercase;
+    .detail-card p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
     }
 
-    .card p {
-      font-size: 0.9rem;
-      color: var(--muted);
-      flex-grow: 1;
+    .detail-card .evidence-box {
+      margin-top: 8px;
+      padding: 12px;
+      background: rgba(0,0,0,0.3);
+      border-left: 3px solid var(--highlight);
+      font-size: 0.85rem;
+      color: #d4d4d8;
     }
 
     footer {
       text-align: center;
       margin-top: 48px;
       padding-top: 24px;
-      border-top: 1px solid var(--border);
+      border-top: 1px solid var(--card-border);
       color: var(--muted);
-      font-size: 0.8rem;
+      font-size: 0.85rem;
     }
   </style>
 </head>
@@ -148,121 +251,275 @@
 
   <div class="container">
     <header>
-      <h1 data-i18n="site_title">日军侵华罪证历史档案</h1>
-      <div class="lang-switcher">
-        <button class="btn-lang active" onclick="setLanguage('zh')">中文</button>
-        <button class="btn-lang" onclick="setLanguage('en')">English</button>
-        <button class="btn-lang" onclick="setLanguage('ja')">日本語</button>
+      <div class="header-top">
+        <h1 data-i18n="site_title">日军侵华罪证与公判历史档案</h1>
+        <div class="lang-switcher">
+          <button class="btn-lang active" onclick="switchLanguage('zh')">中文</button>
+          <button class="btn-lang" onclick="switchLanguage('en')">English</button>
+          <button class="btn-lang" onclick="switchLanguage('ja')">日本語</button>
+        </div>
       </div>
+
+      <!-- 页面导航栏 -->
+      <nav class="nav-bar">
+        <button class="nav-btn active" onclick="switchTab('home')" data-i18n="nav_home">档案首页</button>
+        <button class="nav-btn" onclick="switchTab('nanjing')" data-i18n="nav_nanjing">南京大屠杀</button>
+        <button class="nav-btn" onclick="switchTab('unit731')" data-i18n="nav_unit731">731部队生化罪行</button>
+        <button class="nav-btn" onclick="switchTab('comfort')" data-i18n="nav_comfort">强征“慰安妇”制度</button>
+        <button class="nav-btn" onclick="switchTab('tribunal')" data-i18n="nav_tribunal">东京审判与历史公断</button>
+      </nav>
     </header>
 
-    <div class="intro-box">
-      <p data-i18n="site_intro">以史为鉴，警示未来。本档案记录了侵华日军战争罪行的历史事实、文献与国际审判公认罪证。</p>
-    </div>
+    <!-- 主页 Overview -->
+    <section id="page-home" class="page-section active">
+      <!-- 动态响应多语言的 2D 宣传画核心区 -->
+      <div class="poster-container">
+        <img class="poster-img" src="watermarked_img_4868079140728638459.png" alt="日军侵华罪证历史画面" />
+        <div class="poster-overlay">
+          <div class="poster-title-top" data-i18n="poster_title">侵略的铁证 · 不容抵赖</div>
+          <div class="poster-subtitle-bottom" data-i18n="poster_sub">铭记军国主义暴行，告慰死难同胞，守护世界和平</div>
+        </div>
+      </div>
 
-    <main class="grid">
-      <article class="card">
-        <span class="meta" data-i18n="card1_tag">大屠杀事件</span>
-        <h2 data-i18n="card1_title">南京大屠杀 (1937)</h2>
-        <p data-i18n="card1_desc">1937年12月，日军攻占南京后，对中国平民与解除武装的士兵展开了长达6周的屠杀、强奸与洗劫。远东国际军事法庭（东京审判）确认遇难人数达20万人以上，中国官方调查及审判确认死难者达30万人以上。</p>
-      </article>
+      <div class="grid-cards">
+        <div class="detail-card">
+          <span class="tag" data-i18n="tag_extermination">灭绝与屠杀</span>
+          <h3 data-i18n="home_card1_title">战地屠杀与“三光政策”</h3>
+          <p data-i18n="home_card1_desc">日军在华北推行“杀光、烧光、抢光”的“烬灭作战”（三光政策），对无辜村民进行灭绝性清乡，制造大量无人区与白骨累累的万人坑。</p>
+        </div>
+        <div class="detail-card">
+          <span class="tag" data-i18n="tag_chemical">大规模杀伤武器</span>
+          <h3 data-i18n="home_card2_title">化学武器实战使用</h3>
+          <p data-i18n="home_card2_desc">违反《海牙公约》与《日内瓦议定书》，在淞沪、武汉、晋察冀等战役中上千次使用芥子气、路易氏气等糜烂性毒气弹，造成守军与百姓大量死伤并遗弃毒弹留患至今。</p>
+        </div>
+      </div>
+    </section>
 
-      <article class="card">
-        <span class="meta" data-i18n="card2_tag">细菌与生物武器</span>
-        <h2 data-i18n="card2_title">731部队生化战实验</h2>
-        <p data-i18n="card2_desc">侵华日军关东军防疫给水部（731部队）在哈尔滨等地利用活人进行鼠疫、霍乱、冻伤及毒气实验，被称为“马路大”。并在中国多地实施细菌战，造成大量平民死伤，严重违反《日内瓦议定书》。</p>
-      </article>
+    <!-- 南京大屠杀页面 -->
+    <section id="page-nanjing" class="page-section">
+      <div class="detail-card">
+        <span class="tag" data-i18n="tag_massacre">反人类暴行</span>
+        <h2 data-i18n="nanjing_detail_title" style="color:#fff; font-size:1.3rem;">南京大屠杀 (1937.12 - 1938.01)</h2>
+        <p data-i18n="nanjing_detail_p1">1937年12月13日日军占领南京后，展开了长达40多天无休止的屠杀与浩劫。除集体机枪扫射、刺刀刺杀、活埋以外，日军还在城市各个角落实施了规模空前的有组织强奸与纵火洗劫。</p>
+        <div class="evidence-box">
+          <strong data-i18n="evidence_title">关键罪证档案：</strong>
+          <ul style="padding-left: 20px; margin-top: 6px;">
+            <li data-i18n="nanjing_doc1">《拉贝日记》与《魏特琳日记》：记录南京安全区内外日军军官与士兵的暴行细节。</li>
+            <li data-i18n="nanjing_doc2">远东国际军事法庭判决书（东京审判）：裁定死难人数超过20万人，遭强奸受害者达2万余人。</li>
+            <li data-i18n="nanjing_doc3">南京审判战犯军事法庭判决：判定被日军集体屠杀并抛尸长江、掩埋者超19万人，零散屠杀超15万人，总人数达30万以上。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
-      <article class="card">
-        <span class="meta" data-i18n="card3_tag">战争性奴隶制</span>
-        <h2 data-i18n="card3_title">强征“慰安妇”制度</h2>
-        <p data-i18n="card3_desc">日本军队在侵华战争和太平洋战争期间，通过诱骗、强迫等手段，在占领区强制征集数十万女性充当随军性奴隶，对受害者的身心造成了不可磨灭的残酷摧残。</p>
-      </article>
+    <!-- 731部队页面 -->
+    <section id="page-unit731" class="page-section">
+      <div class="detail-card">
+        <span class="tag" data-i18n="tag_bio">生物与人体实验</span>
+        <h2 data-i18n="unit731_detail_title" style="color:#fff; font-size:1.3rem;">侵华日军第七三一部队（满洲第731部队）</h2>
+        <p data-i18n="unit731_detail_p1">以石井四郎为首的731部队以“防疫给水”为伪装，在哈尔滨平房建立庞大生化实验室。他们将活人蔑称为“马路大”（圆木），进行野蛮残酷的活体解剖、极寒冻伤实验、低压舱减压爆破、细菌毒素注射等致命人体实验，受害者无一生还。</p>
+        <div class="evidence-box">
+          <strong data-i18n="evidence_title">关键罪证档案：</strong>
+          <ul style="padding-left: 20px; margin-top: 6px;">
+            <li data-i18n="unit731_doc1">伯力审判（哈巴罗夫斯克审判）档案：12名关东军军官对活人细菌实验及细菌战部署的认罪记录。</li>
+            <li data-i18n="unit731_doc2">常德、宁波细菌战现场调查：日军飞机空投携带鼠疫跳蚤的小麦、棉絮，引发区域性烈性鼠疫大流行。</li>
+            <li data-i18n="unit731_doc3">日本厚生省解密“留守名簿”及原队员金子安次等人的战后忏悔与证词。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
-      <article class="card">
-        <span class="meta" data-i18n="card4_tag">无差别轰炸</span>
-        <h2 data-i18n="card4_title">重庆大轰炸 (1938–1943)</h2>
-        <p data-i18n="card4_desc">日军航空兵对中国战时陪都重庆及周边非军事区进行了长达5年半的战略性与惩罚性无差别轰炸，造成数万平民伤亡，大批学校、民居和医院被毁。</p>
-      </article>
-    </main>
+    <!-- 慰安妇制度页面 -->
+    <section id="page-comfort" class="page-section">
+      <div class="detail-card">
+        <span class="tag" data-i18n="tag_slavery">国家军事性奴隶制</span>
+        <h2 data-i18n="comfort_detail_title" style="color:#fff; font-size:1.3rem;">侵华日军强征“慰安妇”罪行</h2>
+        <p data-i18n="comfort_detail_p1">日本军国主义推行的“慰安所”制度，是20世纪人类文明史上极其罕见、由国家政府与军队直接建立与管理的有组织性奴役系统。数十万中国、朝鲜半岛及东南亚妇女被诱骗、绑架与暴力强征，遭受长时间的摧残与非人虐待。</p>
+        <div class="evidence-box">
+          <strong data-i18n="evidence_title">关键罪证档案：</strong>
+          <ul style="padding-left: 20px; margin-top: 6px;">
+            <li data-i18n="comfort_doc1">吉林省档案馆藏关东军“宪兵队”原始档案：明确记录军队调拨资金、派车移送妇女及设立慰安所的军方公文。</li>
+            <li data-i18n="comfort_doc2">联合国人权委员会报告（库马拉斯瓦米报告）：将“慰安妇”定性为严重的“战争时期的军事性奴隶制”。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 东京审判公决页面 -->
+    <section id="page-tribunal" class="page-section">
+      <div class="detail-card">
+        <span class="tag" data-i18n="tag_justice">历史与法律的正义审判</span>
+        <h2 data-i18n="tribunal_detail_title" style="color:#fff; font-size:1.3rem;">远东国际军事法庭与南京审判</h2>
+        <p data-i18n="tribunal_detail_p1">二战胜利后，同盟国在东京成立远东国际军事法庭对日本甲级战犯进行审判，中国亦设立十处军事法庭审判乙、丙级战犯。法庭认定了日本发动侵略战争的罪责，将东条英机、松井石根、土肥原贤二等战争罪犯处以绞刑。</p>
+        <div class="evidence-box">
+          <strong data-i18n="evidence_title">关键公决结果：</strong>
+          <ul style="padding-left: 20px; margin-top: 6px;">
+            <li data-i18n="tribunal_doc1">东京审判确定松井石根对南京大屠杀负有直接战争罪责并执行绞刑。</li>
+            <li data-i18n="tribunal_doc2">南京审判战犯军事法庭对南京大屠杀主犯谷寿夫判处死刑，并在雨花台枪决。</li>
+            <li data-i18n="tribunal_doc3">“百人斩”杀人比赛主犯向井敏明、野田毅及田中军吉在南京被判处死刑。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
     <footer>
-      <p data-i18n="footer_text">铭记历史 · 珍爱和平</p>
+      <p data-i18n="footer_text">历史不容篡改 · 罪证不容遗忘 · 珍爱和平</p>
     </footer>
   </div>
 
   <script>
     const translations = {
       zh: {
-        site_title: "日军侵华罪证历史档案",
-        site_intro: "以史为鉴，警示未来。本档案记录了侵华日军战争罪行的历史事实、文献与国际审判公认罪证。",
-        card1_tag: "大屠杀事件",
-        card1_title: "南京大屠杀 (1937)",
-        card1_desc: "1937年12月，日军攻占南京后，对中国平民与解除武装的士兵展开了长达6周的屠杀、强奸与洗劫。远东国际军事法庭（东京审判）确认遇难人数达20万人以上，中国官方调查及审判确认死难者达30万人以上。",
-        card2_tag: "细菌与生物武器",
-        card2_title: "731部队生化战实验",
-        card2_desc: "侵华日军关东军防疫给水部（731部队）在哈尔滨等地利用活人进行鼠疫、霍乱、冻伤及毒气实验，被称为“马路大”。并在中国多地实施细菌战，造成大量平民死伤，严重违反《日内瓦议定书》。",
-        card3_tag: "战争性奴隶制",
-        card3_title: "强征“慰安妇”制度",
-        card3_desc: "日本军队在侵华战争和太平洋战争期间，通过诱骗、强迫等手段，在占领区强制征集数十万女性充当随军性奴隶，对受害者的身心造成了不可磨灭的残酷摧残。",
-        card4_tag: "无差别轰炸",
-        card4_title: "重庆大轰炸 (1938–1943)",
-        card4_desc: "日军航空兵对中国战时陪都重庆及周边非军事区进行了长达5年半的战略性与惩罚性无差别轰炸，造成数万平民伤亡，大批学校、民居和医院被毁。",
-        footer_text: "铭记历史 · 珍爱和平"
+        site_title: "日军侵华罪证与公判历史档案",
+        nav_home: "档案首页",
+        nav_nanjing: "南京大屠杀",
+        nav_unit731: "731部队生化罪行",
+        nav_comfort: "强征“慰安妇”制度",
+        nav_tribunal: "东京审判与历史公断",
+        poster_title: "侵略的铁证 · 不容抵赖",
+        poster_sub: "铭记军国主义暴行，告慰死难同胞，守护世界和平",
+        tag_extermination: "灭绝与屠杀",
+        home_card1_title: "战地屠杀与“三光政策”",
+        home_card1_desc: "日军在华北推行“杀光、烧光、抢光”的“烬灭作战”（三光政策），对无辜村民进行灭绝性清乡，制造大量无人区与白骨累累的万人坑。",
+        tag_chemical: "大规模杀伤武器",
+        home_card2_title: "化学武器实战使用",
+        home_card2_desc: "违反《海牙公约》与《日内瓦议定书》，在淞沪、武汉、晋察冀等战役中上千次使用芥子气、路易氏气等糜烂性毒气弹，造成守军与百姓大量死伤并遗弃毒弹留患至今。",
+        tag_massacre: "反人类暴行",
+        nanjing_detail_title: "南京大屠杀 (1937.12 - 1938.01)",
+        nanjing_detail_p1: "1937年12月13日日军占领南京后，展开了长达40多天无休止的屠杀与浩劫。除集体机枪扫射、刺刀刺杀、活埋以外，日军还在城市各个角落实施了规模空前的有组织强奸与纵火洗劫。",
+        evidence_title: "关键罪证档案：",
+        nanjing_doc1: "《拉贝日记》与《魏特琳日记》：记录南京安全区内外日军军官与士兵的暴行细节。",
+        nanjing_doc2: "远东国际军事法庭判决书（东京审判）：裁定死难人数超过20万人，遭强奸受害者达2万余人。",
+        nanjing_doc3: "南京审判战犯军事法庭判决：判定被日军集体屠杀并抛尸长江、掩埋者超19万人，零散屠杀超15万人，总人数达30万以上。",
+        tag_bio: "生物与人体实验",
+        unit731_detail_title: "侵华日军第七三一部队（满洲第731部队）",
+        unit731_detail_p1: "以石井四郎为首的731部队以“防疫给水”为伪装，在哈尔滨平房建立庞大生化实验室。他们将活人蔑称为“马路大”（圆木），进行野蛮残酷的活体解剖、极寒冻伤实验、低压舱减压爆破、细菌毒素注射等致命人体实验，受害者无一生还。",
+        unit731_doc1: "伯力审判（哈巴罗夫斯克审判）档案：12名关东军军官对活人细菌实验及细菌战部署的认罪记录。",
+        unit731_doc2: "常德、宁波细菌战现场调查：日军飞机空投携带鼠疫跳蚤的小麦、棉絮，引发区域性烈性鼠疫大流行。",
+        unit731_doc3: "日本厚生省解密“留守名簿”及原队员金子安次等人的战后忏悔与证词。",
+        tag_slavery: "国家军事性奴隶制",
+        comfort_detail_title: "侵华日军强征“慰安妇”罪行",
+        comfort_detail_p1: "日本军国主义推行的“慰安所”制度，是20世纪人类文明史上极其罕见、由国家政府与军队直接建立与管理的有组织性奴役系统。数十万中国、朝鲜半岛及东南亚妇女被诱骗、绑架与暴力强征，遭受长时间的摧残与非人虐待。",
+        comfort_doc1: "吉林省档案馆藏关东军“宪兵队”原始档案：明确记录军队调拨资金、派车移送妇女及设立慰安所的军方公文。",
+        comfort_doc2: "联合国人权委员会报告（库马拉斯瓦米报告）：将“慰安妇”定性为严重的“战争时期的军事性奴隶制”。",
+        tag_justice: "历史与法律的正义审判",
+        tribunal_detail_title: "远东国际军事法庭与南京审判",
+        tribunal_detail_p1: "二战胜利后，同盟国在东京成立远东国际军事法庭对日本甲级战犯进行审判，中国亦设立十处军事法庭审判乙、丙级战犯。法庭认定了日本发动侵略战争的罪责，将东条英机、松井石根、土肥原贤二等战争罪犯处以绞刑。",
+        tribunal_doc1: "东京审判确定松井石根对南京大屠杀负有直接战争罪责并执行绞刑。",
+        tribunal_doc2: "南京审判战犯军事法庭对南京大屠杀主犯谷寿夫判处死刑，并在雨花台枪决。",
+        tribunal_doc3: "“百人斩”杀人比赛主犯向井敏明、野田毅及田中军吉在南京被判处死刑。",
+        footer_text: "历史不容篡改 · 罪证不容遗忘 · 珍爱和平"
       },
       en: {
-        site_title: "Archive of Japanese War Crimes in China",
-        site_intro: "Remember history, safeguard the future. This archive documents verified historical facts, records, and internationally adjudicated war crimes committed by the Imperial Japanese Army.",
-        card1_tag: "Mass Murder",
-        card1_title: "The Nanjing Massacre (1937)",
-        card1_desc: "Beginning in December 1937, Imperial Japanese troops captured Nanjing and engaged in six weeks of mass executions, rape, and looting against civilians and disarmed soldiers. The Tokyo War Crimes Tribunal established the death toll at over 200,000, while Chinese investigations established over 300,000 victims.",
-        card2_tag: "Biological Warfare",
-        card2_title: "Unit 731 Human Experimentation",
-        card2_desc: "Unit 731 of the Kwantung Army conducted lethal human experiments in Harbin involving plague, cholera, frostbite, and chemical weapons on captives known as 'marutas'. They subsequently deployed biological weapons across China in direct violation of the Geneva Protocol.",
-        card3_tag: "Military Sexual Slavery",
-        card3_title: "The 'Comfort Women' System",
-        card3_desc: "During the Second Sino-Japanese War and World War II, the Imperial Japanese military forced hundreds of thousands of women from occupied territories into institutionalized sexual slavery through coercion and deception.",
-        card4_tag: "Indiscriminate Bombing",
-        card4_title: "Bombing of Chongqing (1938–1943)",
-        card4_desc: "For over five years, the Imperial Japanese aviation forces conducted sustained, indiscriminate terror bombings against non-military targets in China's provisional capital, Chongqing, causing catastrophic civilian casualties.",
-        footer_text: "Remember the Past · Strive for Peace"
+        site_title: "Historical Evidence & Trial Records of Japanese Aggression in China",
+        nav_home: "Archive Home",
+        nav_nanjing: "Nanjing Massacre",
+        nav_unit731: "Unit 731 Bio-Warfare",
+        nav_comfort: "'Comfort Women' System",
+        nav_tribunal: "Tokyo Trials & Verdicts",
+        poster_title: "EVIDENCE OF AGGRESSION: IRREFUTABLE AND UNFORGOTTEN",
+        poster_sub: "Remembering the atrocities of militarism, honoring the victims, and defending peace",
+        tag_extermination: "Extermination & Massacres",
+        home_card1_title: "Scorched-Earth & 'Three Alls' Policy",
+        home_card1_desc: "The Japanese military implemented the 'Kill All, Burn All, Loot All' policy in northern China, liquidating civilian populations, creating uninhabited wasteland zones, and leaving mass graves in their wake.",
+        tag_chemical: "Weapons of Mass Destruction",
+        home_card2_title: "Deployment of Chemical Warfare",
+        home_card2_desc: "Violating the Hague and Geneva Protocols, lethal mustard and lewisite gas agents were deployed thousands of times in battles such as Shanghai and Wuhan, inflicting devastating casualties and leaving abandoned chemical munitions that persist to this day.",
+        tag_massacre: "Crimes Against Humanity",
+        nanjing_detail_title: "The Nanjing Massacre (Dec 1937 - Jan 1938)",
+        nanjing_detail_p1: "Following the capture of Nanjing on Dec 13, 1937, Imperial Japanese troops carried out over 40 days of relentless atrocities. Beyond mass machine-gunning, bayoneting, and live burials, troops executed citywide systematic gang rapes, arson, and looting.",
+        evidence_title: "Key Evidentiary Archives:",
+        nanjing_doc1: "The Diaries of John Rabe and Minnie Vautrin: Primary eyewitness documentations of soldier atrocities inside and outside the Safety Zone.",
+        nanjing_doc2: "Tokyo War Crimes Tribunal Verdict: Formally established civilian and prisoner fatalities exceeded 200,000, with over 20,000 recorded rapes.",
+        nanjing_doc3: "Nanjing War Crimes Tribunal Judgment: Documented over 190,000 victims from collective massacres and over 150,000 victims of individual killings, confirming total casualties exceeding 300,000.",
+        tag_bio: "Biological & Human Testing",
+        unit731_detail_title: "Imperial Japanese Army Unit 731",
+        unit731_detail_p1: "Under Shiro Ishii and disguised as 'Epidemic Prevention and Water Purification', Unit 731 ran a sprawling biological warfare center in Harbin. Human victims, dehumanized as 'marutas' (logs), were subjected to fatal vivisections, frostbite torture, explosive decompression, and pathogen injections with zero survivors.",
+        unit731_doc1: "Khabarovsk War Crime Trials Records: Confessions by 12 Kwantung Army commanders detailing live human biological experiments and battlefield dissemination.",
+        unit731_doc2: "Changde and Ningbo Biological Warfare Reports: Field investigations confirming Japanese aerial drops of plague-infected fleas on cotton and grain.",
+        unit731_doc3: "Declassified roster records from the Japanese Ministry of Health, along with testimonies and confessions from former unit members.",
+        tag_slavery: "Military Sexual Slavery",
+        comfort_detail_title: "The Forced 'Comfort Women' System",
+        comfort_detail_p1: "The 'comfort station' network was an institutionalized military sexual slavery system directly financed, established, and controlled by the Imperial Japanese government and military. Hundreds of thousands of women across China, Korea, and Southeast Asia were abducted and subjected to systematic sexual violence.",
+        comfort_doc1: "Jilin Provincial Archives (Kwantung Army Kempeitai Files): Official military communiques detailing military budgets, logistical transport of women, and command directives.",
+        comfort_doc2: "UN Commission on Human Rights (Coomaraswamy Report): Formally classified the system as organized 'military sexual slavery in wartime'.",
+        tag_justice: "Legal and Historical Justice",
+        tribunal_detail_title: "The Tokyo Trials & War Crime Verdicts",
+        tribunal_detail_p1: "Following WWII, the International Military Tribunal for the Far East (IMTFE) and Chinese military tribunals prosecuted Japanese Class-A, B, and C war criminals, sentencing key figures like Hideki Tojo, Iwane Matsui, and Kenji Doihara to death by hanging for crimes against peace and humanity.",
+        tribunal_doc1: "IMTFE sentenced General Iwane Matsui to hanging for direct criminal responsibility in the Nanjing Massacre.",
+        tribunal_doc2: "Nanjing War Crimes Military Tribunal sentenced General Hisao Tani to death; executed at Yuhuatai.",
+        tribunal_doc3: "Perpetrators of the infamous '100-man killing contest', Toshiaki Mukai and Tsuyoshi Noda, were convicted and executed in Nanjing.",
+        footer_text: "Never Distort History · Never Forget the Evidence · Cherish Peace"
       },
       ja: {
-        site_title: "日本軍の中国侵略における戦争犯罪資料館",
-        site_intro: "歴史を鑑とし、未来を戒める。本アーカイブは、日中戦争期における旧日本軍の戦争犯罪に関する公的記録および国際裁判の資料を記録するものです。",
-        card1_tag: "虐殺事件",
-        card1_title: "南京事件 (1937年)",
-        card1_desc: "1937年12月、日本軍が南京を占領した際、捕虜や民間人に対して大規模な虐殺、略奪、暴行を行いました。極東国際軍事裁判（東京裁判）の判決では犠牲者数は20万人以上と認定され、中国側の調査では30万人以上と記録されています。",
-        card2_tag: "細菌・生物兵器",
-        card2_title: "731部隊による生体実験",
-        card2_desc: "関東軍防疫給水部（731部隊）はハルビン等で捕虜（マルタ）を用い、ペスト、コレラ、凍傷などの生体実験を実施しました。さらにジュネーヴ議定書に違反し、中国各地で細菌兵器を実戦投入しました。",
-        card3_tag: "軍用性奴隷制",
-        card3_title: "旧日本軍「慰安婦」制度",
-        card3_desc: "日中戦争および太平洋戦争の期間中、日本軍の関与のもと、占領地などから多数の女性が欺瞞や強制によって集められ、軍専用の性的奴隷として過酷な被害を受けました。",
-        card4_tag: "無差別爆撃",
-        card4_title: "重慶爆撃 (1938–1943年)",
-        card4_desc: "日本軍航空部隊は、中国の戦時首都であった重慶とその周辺の非軍事地域に対し、5年半にわたり無差別戦略爆撃を継続して行い、多くの一般市民に甚大な被害を与えました。",
-        footer_text: "歴史を記憶し、平和を希求する"
+        site_title: "旧日本軍の中国侵略における戦争犯罪と裁判記録",
+        nav_home: "アーカイブ概要",
+        nav_nanjing: "南京大虐殺事件",
+        nav_unit731: "731部隊の生体実験",
+        nav_comfort: "「慰安婦」強制連行制度",
+        nav_tribunal: "東京裁判と歴史の審判",
+        poster_title: "侵略の動かぬ証拠 · 忘れてはならない歴史",
+        poster_sub: "軍国主義の暴虐を記憶し、犠牲者を追悼し、恒久平和を守る",
+        tag_extermination: "殲滅と虐殺",
+        home_card1_title: "戦地における虐殺と「三光作戦」",
+        home_card1_desc: "華北地域で行われた「焼き尽くし、奪い尽くし、殺し尽くす」三光作戦（燼滅作戦）により、無数の集落が消滅し、広大な無人区と万人坑が残されました。",
+        tag_chemical: "大量破壊兵器",
+        home_card2_title: "化学兵器の実戦使用",
+        home_card2_desc: "ハーグ条約およびジュネーヴ議定書に反し、上海や武漢などの戦線でびらん性毒ガスが繰り返し実戦投入され、多数の死傷者を出すとともに遺棄毒ガス弾が今なお被害を及ぼしています。",
+        tag_massacre: "人道に対する罪",
+        nanjing_detail_title: "南京事件 (1937年12月 - 1938年1月)",
+        nanjing_detail_p1: "1937年12月13日の南京占領後、旧日本軍は6週間にわたり捕虜や非戦闘員への大量虐殺、拷問、組織的強姦、略奪、放火を継続しました。",
+        evidence_title: "主要な公的証拠記録：",
+        nanjing_doc1: "『ラーベの日記』および『ヴォートリンの日記』：安全区内外での日本軍将兵による暴行の実態を記録。",
+        nanjing_doc2: "極東国際軍事裁判（東京裁判）判決書：犠牲者数は20万人以上、強姦被害は2万件以上に上ると認定。",
+        nanjing_doc3: "南京戦犯裁判法廷判決書：集団虐殺・遺棄による犠牲者19万人以上、個別虐殺15万人以上、計30万人以上と算定。",
+        tag_bio: "生物兵器と人体実験",
+        unit731_detail_title: "関東軍防疫給水部（満洲第731部隊）",
+        unit731_detail_p1: "石井四郎中将率いる731部隊はハルビン市平房に大規模な施設を築き、捕虜らを「マルタ（丸太）」と呼んで生体解剖、凍傷実験、高圧減圧実験、ペスト菌等の投与実験を行い、収容者を一人も生還させませんでした。",
+        unit731_doc1: "ハバロフスク裁判記録：細菌戦の準備および生体実験に関する元将校らの供述書・有罪判決。",
+        unit731_doc2: "常徳・寧波における細菌戦報告：ペスト菌を付着させたノミを航空機から散布し、地域的感染爆発を引き起こした公的証拠。",
+        unit731_doc3: "厚生労働省保管の「留守名簿」の公開、および元隊員らによる戦後の告白・証言。",
+        tag_slavery: "軍用性奴隷制度",
+        comfort_detail_title: "旧日本軍による「慰安婦」強制制度",
+        comfort_detail_p1: "「慰安所」の設置・管理は、軍と国家機関が組織的に運営した軍用性奴隷制度です。中国、朝鮮半島、東南アジア各地の多数の女性が欺瞞や強制連行によって集められ、自由を奪われ過酷な性暴力を受けました。",
+        comfort_doc1: "吉林省档案館所蔵・旧関東軍憲兵隊文書：軍資金の支出、女性の軍用移送、慰安所統制に関する当時の公式軍事記録。",
+        comfort_doc2: "国連人権委員会報告（クマラスワミ報告）：本制度を「戦時における軍事的性奴隷制」と明確に規定。",
+        tag_justice: "法と歴史による裁定",
+        tribunal_detail_title: "極東国際軍事裁判および南京裁判",
+        tribunal_detail_p1: "終戦後、連合国は東京で極東国際軍事裁判を開廷し、侵略戦争の指導者たちを有罪とし、東条英机、松井石根らに死刑判決を下しました。中国各都市の軍事法廷でもBC級戦犯が裁かれました。",
+        tribunal_doc1: "東京裁判において、松井石根は南京事件の指揮責任により絞首刑に処せられた。",
+        tribunal_doc2: "南京軍事法廷において、南京大虐殺の主犯格である谷寿夫中将に死刑判決が下され、執行された。",
+        tribunal_doc3: "「百人斬り競争」の主犯である向井敏明、野田毅らも南京にて死刑判決を受け、刑が執行された。",
+        footer_text: "歴史を改ざんせず · 証拠を記憶し · 平和を希求する"
       }
     };
 
-    function setLanguage(lang) {
-      // 1. 更新所有包含 data-i18n 属性的文本
-      const elements = document.querySelectorAll('[data-i18n]');
-      elements.forEach(el => {
+    function switchLanguage(lang) {
+      document.documentElement.lang = lang;
+
+      // 切换语言按钮高亮
+      document.querySelectorAll('.btn-lang').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('onclick').includes(`'${lang}'`));
+      });
+
+      // 批量替换页面文本（包括海报标题 poster_title 和 poster_sub）
+      document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (translations[lang] && translations[lang][key]) {
           el.textContent = translations[lang][key];
         }
       });
+    }
 
-      // 2. 更新 html 标签的 lang 属性
-      document.documentElement.lang = lang;
+    function switchTab(pageId) {
+      document.querySelectorAll('.page-section').forEach(sec => {
+        sec.classList.remove('active');
+      });
+      const target = document.getElementById('page-' + pageId);
+      if (target) target.classList.add('active');
 
-      // 3. 更新按钮的高亮选中状态
-      const buttons = document.querySelectorAll('.btn-lang');
-      buttons.forEach(btn => {
-        btn.classList.toggle('active', btn.getAttribute('onclick').includes(`'${lang}'`));
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('onclick').includes(`'${pageId}'`));
       });
     }
   </script>
